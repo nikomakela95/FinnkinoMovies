@@ -89,7 +89,7 @@
 	<div class="col-md-4 inputs">
 		<br>
 		
-		<input type="text" name="search" id="search" placeholder="Search movies" class="form-control"></p>
+		<input type="text" name="search" id="search" placeholder="Search movies" class="form-control">
 	</div>
 	
 	</div>
@@ -120,32 +120,33 @@
 			function changeCity() {
 				// Parts of the url
 				var api = 'https://www.finnkino.fi/xml/Schedule/?area=';
-			 var theatre = document.getElementById("city").value;
-			 var date = document.getElementById("date").value;
-			 var url = api + theatre + "&" + "dt=" + date;
+			 	var theatre = document.getElementById("city").value;
+			 	var date = document.getElementById("date").value;
+			 	var url = api + theatre + "&" + "dt=" + date;
 
 				var xmlhttp = new XMLHttpRequest(); // New XMLHttpRequest
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send(); // Send the request with above arguments
+				xmlhttp.open("GET", url, true);
+				xmlhttp.send(); // Send the request with above arguments
 
-		// EventHandler that is called when the readyState attribute changes
-		xmlhttp.onreadystatechange=function() {		
+				// EventHandler that is called when the readyState attribute changes
+				xmlhttp.onreadystatechange=function() {		
 
-			//When readyState is 4 and status is 200, the response is ready
-			if(xmlhttp.readyState==4 && xmlhttp.status==200){
-				var xmlDoc = xmlhttp.responseXML; //Save response to a variable
-				var shows = xmlDoc.getElementsByTagName("Show"); // Find all "Show" tags in the xml document
-				var table = "<table>"; // Start creating the table for movies 
-				table += '<th>' + "" + '</th>';
-				table += '<th>' + "Movie" + '</th>';
-				table += '<th>' +  "Theatre" + '</th>';
-				table += '<th>' + "Time" + '</th>';
+					//When readyState is 4 and status is 200, the response is ready
+					if(xmlhttp.readyState==4 && xmlhttp.status==200){
+						var xmlDoc = xmlhttp.responseXML; //Save response to a variable
+						var shows = xmlDoc.getElementsByTagName("Show"); // Find all "Show" tags in the xml document
+						var table = "<table>"; // Start creating the table for movies 
+						table += '<th>' + "" + '</th>';
+						table += '<th>' + "Movie" + '</th>';
+						table += '<th>' +  "Theatre" + '</th>';
+						table += '<th>' + "Time" + '</th>';
+
 				// Loop through xml document and find title, theater, images and starting time for the movies
-				for (var i = 0; i < shows.length; i++){	
-					var showName = shows[i].getElementsByTagName("OriginalTitle")[0].innerHTML;
-					var movieTheatre = shows[i].getElementsByTagName("Theatre")[0].innerHTML;
-					var image = shows[i].getElementsByTagName("Images")[0].getElementsByTagName("EventLargeImagePortrait")[0].innerHTML;
-					var startTime = shows[i].getElementsByTagName("dttmShowStart")[0].innerHTML;
+					for (var i = 0; i < shows.length; i++){	
+						var showName = shows[i].getElementsByTagName("OriginalTitle")[0].innerHTML;
+						var movieTheatre = shows[i].getElementsByTagName("Theatre")[0].innerHTML;
+						var image = shows[i].getElementsByTagName("Images")[0].getElementsByTagName("EventLargeImagePortrait")[0].innerHTML;
+						var startTime = shows[i].getElementsByTagName("dttmShowStart")[0].innerHTML;
 				
 				//Place movie details to table
 				table += '<tr>';
@@ -164,77 +165,64 @@
 
 			
 
-			$(document).ready(function(){ 
- $('#search').keydown(function(){
-  $('#result').html('');
-  var searchField = $('#search').val();
-  var expression = new RegExp(searchField, "i");
-$.ajax({
-    type: "GET",
-    url: "https://www.finnkino.fi/xml/Events/",
-    dataType: "xml",
-    success: function(xml){
-    	//var events = xml.getElementsByTagName("Event");
-    	//for(var i = 0; i < events.length; i++){
-    	//	var title = events[i].getElementsByTagName("OriginalTitle")[0].innerHTML;
-    	//}
-    	
-    	var title = xml.getElementsByTagName("OriginalTitle");
-    	$.each(title, function(index, value){
-    		
-    	
-    		if (value.innerHTML.search(expression) != -1)
-    			{
-    				if(searchField != ""){ //
+	$(document).ready(function(){
+		$('#search').keydown(function(){
 
-     $('#result').append('<li class="list-group-item link-class"> '+value.innerHTML+' </li>');
-}
-  
-    }
-    
-   });
-   
-   }   
+  			$('#result').html('');
+  			var searchField = $('#search').val();
+  			var expression = new RegExp(searchField, "i");
+
+			$.ajax({
+
+    			type: "GET",
+    			url: "https://www.finnkino.fi/xml/Events/",
+    			dataType: "xml",
+    			success: function(xml){
+    				var title = xml.getElementsByTagName("OriginalTitle");
+    				$.each(title, function(index, value){
+
+    					if (value.innerHTML.search(expression) != -1){
+    						if(searchField != ""){ 
+    							$('#result').append('<li class="list-group-item link-class"> '+value.innerHTML+' </li>');
+					}
+    			}
+  			 });
+   		}   
   });
 
  });
- $('#result').on('click', 'li', function(e) {
- 	$.ajax({
-    type: "GET",
-    url: "https://www.finnkino.fi/xml/Events/",
-    dataType: "xml",
-    success: function(xml){
+ 	$('#result').on('click', 'li', function(e) {
 
-    	var events = xml.getElementsByTagName("Event");
-    	var text = $(e.target).html();
-    	console.log(text);
-		//document.getElementById("table").innerHTML = text;
-    	for (var i = 0; i < events.length; i++){
-    	   	var titles = events[i].getElementsByTagName("OriginalTitle")[0].innerHTML;
-    	   	//var synopsis = events[i].getElementsByTagName("ShortSynopsis")[0].innerHTML;
-    		if ( titles = text) {
-    			var synopsis = events[i].getElementsByTagName("ShortSynopsis").innerHTML;
-    			document.getElementById("table").innerHTML = text + synopsis;
+ 		$.ajax({
+    	type: "GET",
+    	url: "https://www.finnkino.fi/xml/Events/",
+   	 	dataType: "xml",
+   	 	success: function(xml){
+
+    		var events = xml.getElementsByTagName("Event");
+    		var text = $(e.target).html();
+    		console.log(text);
+			//document.getElementById("table").innerHTML = text;
+
+    		for (var i = 0; i < events.length; i++){
+    	   		var titles = events[i].getElementsByTagName("OriginalTitle")[0].innerHTML;
+    	   		//var synopsis = events[i].getElementsByTagName("ShortSynopsis")[0].innerHTML;
+
+    			if ( titles = text) {
+    				var synopsis = events[i].getElementsByTagName("ShortSynopsis").innerHTML;
+    				document.getElementById("table").innerHTML = text + synopsis;
+    			}
     		}
-    	}
     	
   
+  			var click_text = $(this).text().split('|');
+  			$('#search').val('');
+  			$("#result").html('');
 
-    	
-  var click_text = $(this).text().split('|');
-  $('#search').val('');
-  //$('#table').html('');
-  //$('#search').val($.trim(click_text[0]));
-  $("#result").html('');
-
-}
+			}
+ 		});
+ 	});
  });
- });
- });
-
-
-
-
 
 		</script>
 
