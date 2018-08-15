@@ -147,13 +147,16 @@
 						var movieTheatre = shows[i].getElementsByTagName("Theatre")[0].innerHTML;
 						var image = shows[i].getElementsByTagName("Images")[0].getElementsByTagName("EventLargeImagePortrait")[0].innerHTML;
 						var startTime = shows[i].getElementsByTagName("dttmShowStart")[0].innerHTML;
+
+						var date = new Date(startTime).toLocaleTimeString('en-GB', { hour: "numeric", 
+                                             minute: "numeric"});
 				
 				//Place movie details to table
 				table += '<tr>';
 				table += '<td>' +  "<img src=" + image  + ">" + '</td>';
 				table += '<td>' +  showName +  '</td>';
 				table += '<td>' +  movieTheatre +  '</td>';
-				table += '<td>' +  startTime +  '</td>';
+				table += '<td>' +  date +  '</td>';
 				table += '</tr>';
 				
 				document.getElementById("table").innerHTML = table; // Show the created table
@@ -185,7 +188,7 @@
     						if(searchField != ""){ 
     							$('#result').append('<li class="list-group-item link-class"> '+value.innerHTML+' </li>');
 					}
-    			}
+    			} 
   			 });
    		}   
   });
